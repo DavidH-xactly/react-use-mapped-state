@@ -1,30 +1,49 @@
 import { useState } from "react";
 
-const convertToMap = data =>
-  Array.isArray(data) ? new Map(data) : new Map([...Object.entries(data)]);
+/* 
+Use a single map and create state for each item, keeping track of the state setter 
+and the value to return to the component
+*/
+const createState = data => {
+  const map = new Map();
+  data.map(([key, val]) => {
+    const [stateVal, stateSetter] = useState(val);
+    map.set(key, { [key]: stateVal, stateSetter });
+  });
+  return map;
+};
 
-/* Takes in data in two forms standard object or [[key: value]] this allows quick map creation with pbjects
+/* 
+Helper function to determine if we are already working with an array which is what we need
+or if the user has passed in an Object and we need to convert it to an array
+*/
+const convertToMap = data =>
+  createState(Array.isArray(data) ? data : [...Object.entries(data)]);
+
+/* 
+Takes in data in two forms standard object or [[key: value]] this allows quick map creation with objects
 but also the flexibility to use abstract values as a key
 */
 export const useMappedState = data => {
   //convert either array of arrays of key/value pairs or an object into a map
   const newMap = convertToMap(data);
-  //Use react hook to manage state
-  const [mappedState, setMappedState] = useState(newMap);
   //Provide custom function for Modifying the map
   const modifyMappedState = (prop, val) => {
-    //:( we have to create a New Map each time -- not ideal
-    const newMap = new Map([...mappedState.entries()]);
-    //modify value in map
-    newMap.set(prop, val);
-    //Reset state and trigger re-render
-    setMappedState(newMap);
+    const data = newMap.get(prop);
+    const setter = data.stateSetter;
+    setter(val);
   };
-  const returnValues = [...mappedState.entries()].reduce(
-    (values, [key, val]) => ({ ...values, [key]: val }),
+  /* 
+  Current Limitation cannot send back abstract values in the object, could use Array but you can't 
+  determine the order necessarily, because of how Object.entries works, its like .keys so what order can there really be for destructuring??? 
+  */
+  const returnValues = [...newMap.entries()].reduce(
+    (values, [key, val]) => ({ ...values, [key]: val[key] }),
     {}
   );
-  //Return all the values from Map in an object so they can be destructured off and used and our
-  //Custom map modifier
-  return [{ ...returnValues }, modifyMappedState];
+  /*
+  Return all the values from Map in an object so they can be de-structured off and used and our
+  Custom map modifier
+  */
+  return [returnValues, modifyMappedState];
 };
