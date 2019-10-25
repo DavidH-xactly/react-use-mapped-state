@@ -2,23 +2,17 @@ import React from "react";
 import "./App.css";
 import { useMappedState } from "./useMappedState";
 
-const AppThree = props => {
+const AppThree = () => {
   const [{ firstName, lastName, email }, setProperty] = useMappedState({
     firstName: "",
     lastName: "",
     email: ""
   });
-  // const [{ firstName, lastName, email }, setProperty] = useMappedState( useMappedState([
+  // const [{ firstName, lastName, email }, setProperty] = useMappedState([
   //   ["firstName", ""],
   //   ["lastName", ""],
   //   ["email", ""]
   // ]);
-
-  const { firstNameField, lastNameField, emailField } = {
-    firstName: "firstName",
-    lastName: "lastName",
-    email: "email"
-  };
 
   const onInputChange = evt => {
     setProperty(evt.target.name, evt.target.value);
@@ -28,27 +22,27 @@ const AppThree = props => {
     <div className="App">
       <h1>Hello</h1>
       <div>
-        <label htmlFor={firstNameField}>First Name</label>
+        <label htmlFor={"firstName"}>First Name</label>
         <input
-          id={firstNameField}
+          id={"firstName"}
           value={firstName}
           onChange={onInputChange}
           name="firstName"
         />
       </div>
       <div>
-        <label htmlFor={lastNameField}>Last Name</label>
+        <label htmlFor={"lastName"}>Last Name</label>
         <input
-          id={lastNameField}
+          id={"lastName"}
           value={lastName}
           onChange={onInputChange}
           name="lastName"
         />
       </div>
       <div>
-        <label htmlFor={emailField}>Email</label>
+        <label htmlFor={"email"}>Email</label>
         <input
-          id={emailField}
+          id={"email"}
           value={email}
           onChange={onInputChange}
           name="email"
