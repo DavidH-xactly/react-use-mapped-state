@@ -1,26 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      form: {
+        firstName: "",
+        lastName: "",
+        email: ""
+      }
+    };
+    this.onInputChange = this.onInputChange.bind(this);
+  }
+
+  onInputChange(evt) {
+    this.setState({
+      form: { ...this.state.form, [evt.target.name]: evt.target.value }
+    });
+  }
+
+  render() {
+    const { firstName, lastName, email } = {
+      firstName: "firstName",
+      lastName: "lastName",
+      email: "email"
+    };
+    return (
+      <div className="App">
+        <h1>Hello</h1>
+        <div>
+          <label for={firstName}>First Name</label>
+          <input
+            id={firstName}
+            value={this.state.form[firstName]}
+            onChange={this.onInputChange}
+            name={firstName}
+          />
+        </div>
+        <div>
+          <label for={lastName}>Last Name</label>
+          <input
+            id={lastName}
+            value={this.state.form[lastName]}
+            onChange={this.onInputChange}
+            name={lastName}
+          />
+        </div>
+        <div>
+          <label for={email}>Email</label>
+          <input
+            id={email}
+            value={this.state.form[email]}
+            onChange={this.onInputChange}
+            name={email}
+          />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
