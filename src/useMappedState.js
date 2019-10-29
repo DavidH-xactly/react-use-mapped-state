@@ -4,7 +4,8 @@ import { useState } from "react";
 Use a single map and create state for each item, keeping track of the state setter 
 and the value to return to the component
 */
-const createState = data => {
+const convertToMap = data => {
+  data = Array.isArray(data) ? data : Object.entries(data);
   const map = new Map();
   data.map(([key, val]) => {
     const [stateVal, stateSetter] = useState(val);
@@ -12,13 +13,6 @@ const createState = data => {
   });
   return map;
 };
-
-/* 
-Helper function to determine if we are already working with an array which is what we need
-or if the user has passed in an Object and we need to convert it to an array
-*/
-const convertToMap = data =>
-  createState(Array.isArray(data) ? data : [...Object.entries(data)]);
 
 /* 
 Takes in data in two forms standard object or [[key: value]] this allows quick map creation with objects
